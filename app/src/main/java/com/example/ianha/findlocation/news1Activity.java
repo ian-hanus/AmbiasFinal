@@ -1,9 +1,11 @@
 package com.example.ianha.findlocation;
 
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class news1Activity extends AppCompatActivity {
@@ -28,22 +30,46 @@ public class news1Activity extends AppCompatActivity {
         String oldPaperName = paperName;
         paperName = paperName.replace(" ", "");
 
+        String packageName = getPackageName();
+        int resId = getResources().getIdentifier(paperName, "string", packageName);
+
+        String newOut = getResources().getString(resId);
+        Resources res = getResources();
+        String[] articles = res.getStringArray(resId);
+        String combinedArticles = articles[0] + articles[1] + articles[2];
+//
         title.setText(oldPaperName);
-        if(paperName.equals("LosAngelesTimes")){
-            biasText.setText("Biased Liberal: 95.3%");
-        }
-        else if(paperName.equals("SanDiegoTribune")){
-            biasText.setText("Biased Liberal: 57.6%");
-        }
-        else if(paperName.equals("SacramentoBee")){
-            biasText.setText("Biased Liberal: 73.6%");
-        }
-        else if(paperName.equals("OrangeCountyRegister")){
-            biasText.setText("Biased Conservative: 85.2%");
-        }
-        else{
-            biasText.setText("Biased Liberal: 99.7%");
+
+        try{
+            response = predict("plucky-snowfall-219318", "east4", "TCN5419756126499879", combinedArticles);
+        } catch(Exception e){
+            e.printStackTrace();
         }
 
+        String classNames = "";
+        double classScore = 0;
+        for (AnnotationPayload annotationPayload : response.getPayloadList()){
+            classNames = annotationPayload.getDisplayName();
+            classScore = annotationPayload.getClassification().getScore();
+            classScore = classScore * 100;
+        }
+
+        biasText.setText("Biased " + classNames + ": " + classScore + "%");
+
+
+
+    }
+
+    public static PredictResponse predict(String projectId, String computRegion, String modelId, String article) throws IOException {
+        PredictionServiceClien predicitonClient = PredictionServiceClient.create();
+        ModelName name = ModelName.of(projectId, computeRegion, modelId);
+        String content = article;
+        TextSnippet texSnippet = TextSnipet.newBuilder().setContent(content).setMimeType("text/plain").build();
+        ExamplePayload payload = ExamplePayload.newBuilder().setTextSnippet(textSnippet).build();
+        Map<String, String> params = new HashMap<String, String>();
+        PredictResponse respones = predictionClient.predict(name, payload, params);
+        return response;
     }
 }
+
+

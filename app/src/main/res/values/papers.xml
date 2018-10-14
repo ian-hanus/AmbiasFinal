@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="LosAngelesTimes">
+        <item>test1</item>
+        <item>test1</item>
+        <item>test1</item>
+    </string-array>
+    <string-array name="SanDiegoTribune">
+        <item>test1</item>
+        <item>test1</item>
+        <item>test1</item>
+    </string-array>
+    <string-array name="OrangeCountyRegister">
+        <item>test1</item>
+        <item>test1</item>
+        <item>test1</item>
+    </string-array>
+    <string-array name="SanFranciscoChronicle">
+        <item>test1</item>
+        <item>test1</item>
+        <item>test1</item>
+    </string-array>
+    <string-array name="SacramentoBee">
+        <item>test1</item>
+        <item>test1</item>
+        <item>test1</item>
+    </string-array>
+</resources>
